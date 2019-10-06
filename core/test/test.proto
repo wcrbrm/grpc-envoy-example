@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+// import "google/protobuf/descriptor.proto";
+// import "tagger/tagger.proto";
+// import "protoc-gen-swagger/options/annotations.proto";
+
+// ID is a type that requires a field to have unique value that can later will be used
+// for indexed lookups and aggregations.
+// type string ID;
+message ID {
+  // The string value.
+  string v = 1;
+}
+  
+// Lang code per ISO 639-1
+enum Lang {
+  // English (default)
+  en = 0;
+  // French
+  fr = 1;
+  // Spanish
+  es = 2;
+  // German
+  de = 3;
+  // Dutch
+  nl = 4;
+}
+
+// DisplayLocale sets user locale preferences, the backend
+// will format responses to match these preferences.
+message DisplayLocale {
+  // lang code according to ISO 639-1
+  Lang lang = 1;
+  // region as string
+  google.protobuf.StringValue region = 2;
+  // desired currency name
+  google.protobuf.StringValue currency = 3;
+}
+
+enum MediaType {
+  unknown = 0;
+  // `dispute_files` specifies type of file uploads that will be used as attachments
+  // in dispute chat messages.
+  dispute_files = 10;
+  // `chat_files` specifies type of file uploads that will be used as attachments
+  // in regular host-guest and group chats.
+  chat_files = 11;
+  // `photos` specifies type of file uploads that will be used as gallery items
+  // for listing creation.
+  photos = 12;
+  // `review_photos` specifies type of file uploads that will be used as attachments
+  // in reviews from guests.
+  review_photos = 13;
+  // `avatars` specifies type of file uploads that will be used as avatar images.
+  avatars = 14;
+}
+
+// PhotoResolution specifies Width and Height for a photo thumbnail. Must be in WxH format.
+message PhotoResolution {
+  // Width of photo, optional 
+  google.protobuf.Int32Value W = 1;
+  // Height of photo, optional
+  google.protobuf.Int32Value H = 2;
+}
+
+// File represents an uploaded file.
+message File {
+	// FileID is an unique file hash.
+	string file_id = 1;
+	// ParentID of the object containing a reference to this file, e.g. a gallery ID.
+	google.protobuf.StringValue parent_id = 2;
+	// OwnerID is an Account ID of the file owner.
+	google.protobuf.StringValue owner_id = 3;
+	// Name is the filename of the uploaded resource.
+	string name = 4;
+	// SizeBytes is filesize in bytes.
+	int64 size_bytes = 5;
+	// MediaType specifies media type of this file
+	MediaType media_type = 6;
+	// ContentType is the standard content type specifier.
+	google.protobuf.StringValue content_type = 7;
+	// CreatedAt contains timestamp file has been uploaded on.
+	google.protobuf.Timestamp created_at = 8;
+	// ContentURL is a link to the original file, if it must not be processed (i.e. document).
+	google.protobuf.StringValue content_url = 9;
+	// Thumbnails contains a map of resized photo per different photo resolution
+	map<string, string> thumbnails = 10;
+}
